@@ -1,5 +1,8 @@
 FROM staillansag/webmethods-microservicesruntime:10.15.7-msdemo
 
+ARG GIT_TOKEN
+ENV GIT_TOKEN=$GIT_TOKEN
+
 EXPOSE 5555
 EXPOSE 5543
 EXPOSE 9999
