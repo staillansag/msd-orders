@@ -1,0 +1,180 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: OrdersAPI
+  description: API for managing orders in an e-commerce system
+basePath: '/orders-api'
+
+paths:
+  /orders:
+    post:
+      summary: Create a new order
+      description: Creates a new order and returns the created order data
+      operationId: createOrder
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: order
+          description: Order object
+          required: true
+          schema:
+            $ref: '#/definitions/Order'
+      responses:
+        '201':
+          description: Order created successfully
+          schema:
+            $ref: '#/definitions/Order'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  /orders/{orderId}:
+    get:
+      summary: Get an order by ID
+      description: Returns a single order based on the order ID
+      operationId: getOrderById
+      produces:
+        - application/json
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Order found
+          schema:
+            $ref: '#/definitions/Order'
+        '401':
+          description: Unauthorized access
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden access
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Order not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+definitions:
+  Order:
+    type: object
+    required:
+      - orderId
+      - customerId
+      - orderDatetime
+      - totalAmount
+      - currencyCode
+      - orderItems
+    properties:
+      orderId:
+        type: string
+        format: uuid
+        example: "123e4567-e89b-12d3-a456-426655440000"
+      customerId:
+        type: string
+        format: uuid
+        example: "789e4567-e89b-12d3-a456-426655441111"
+      customerEmail:
+        type: string
+        format: email
+        example: "john.doe@gmail.com"
+      orderDatetime:
+        type: string
+        format: date-time
+        example: "2024-01-16T10:00:00Z"
+      totalAmount:
+        type: string
+        format: decimal
+        example: "199.99"
+      currencyCode:
+        type: string
+        example: "USD"
+      paymentMethod:
+        type: string
+        enum: [ 'CreditCard', 'DebitCard', 'PayPal', 'BankTransfer' ]
+        example: "CreditCard"
+      status:
+        type: string
+        enum: [ 'Created', 'Paid', 'Shipped', 'Delivered', 'Cancelled' ]
+        example: "Created"
+      trackingNumber:
+        type: string
+        example: "TRACK1234567890"
+      estimatedDeliveryDate:
+        type: string
+        format: date
+        example: "2024-01-20"
+      createdAt:
+        type: string
+        format: date-time
+        example: "2024-01-16T09:00:00Z"
+      updatedAt:
+        type: string
+        format: date-time
+        example: "2024-01-16T09:15:00Z"
+      orderItems:
+        type: array
+        minItems: 1
+        maxItems: 50
+        items:
+          $ref: '#/definitions/OrderItem'
+
+  OrderItem:
+    type: object
+    required:
+      - orderId
+      - itemId
+      - quantity
+    properties:
+      orderId:
+        type: string
+        format: uuid
+        example: "123e4567-e89b-12d3-a456-426655440000"
+      itemId:
+        type: string
+        format: uuid
+        example: "321e4567-e89b-12d3-a456-426655442222"
+      quantity:
+        type: integer
+        minimum: 1
+        maximum: 50
+        example: 2
+      amount:
+        type: string
+        format: decimal
+        example: "99.99"
+      currencyCode:
+        type: string
+        example: "USD"
+      createdAt:
+        type: string
+        format: date-time
+        example: "2024-01-16T09:00:00Z"
+      updatedAt:
+        type: string
+        format: date-time
+        example: "2024-01-16T09:15:00Z"
+
+  ErrorResponse:
+    type: object
+    required:
+      - message
+    properties:
+      message:
+        type: string
+        example: "Invalid input provided"
