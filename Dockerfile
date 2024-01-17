@@ -9,6 +9,6 @@ EXPOSE 9999
 
 USER sagadmin
 
-ADD --chown=sagadmin . /opt/softwareag/IntegrationServer/packages/msd-orders
+RUN /opt/softwareag/wpm/bin/wpm.sh install -u staillansag -p $GIT_TOKEN -r https://github.com/staillansag -d /opt/softwareag/IntegrationServer msdOrders
 
-RUN chgrp -R 0 /opt/softwareag/IntegrationServer/packages/msd-orders && chmod -R g=u /opt/softwareag/IntegrationServer/packages/msd-orders
+RUN chgrp -R 0 /opt/softwareag/IntegrationServer/packages && chmod -R g=u /opt/softwareag/IntegrationServer/packages
