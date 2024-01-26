@@ -11,4 +11,7 @@ USER sagadmin
 
 RUN /opt/softwareag/wpm/bin/wpm.sh install -u staillansag -p $GIT_TOKEN -r https://github.com/staillansag -d /opt/softwareag/IntegrationServer msdOrders
 
+# Make authorizations compliant with OpenShift
+USER root
 RUN chgrp -R 0 /opt/softwareag/IntegrationServer/packages && chmod -R g=u /opt/softwareag/IntegrationServer/packages
+USER sagadmin
